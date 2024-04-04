@@ -3,6 +3,6 @@ FROM $BASE_IMAGE
 COPY echo_service.py ./
 COPY templates/ ./templates/
 RUN pip install --upgrade pip && \
-    pip install flask
+    pip install flask langchain
 CMD ["python3", "echo_service.py"]
 
