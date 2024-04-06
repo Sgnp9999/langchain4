@@ -5,9 +5,13 @@ from flask import render_template
 import logging
 import os
 import sys
-from langchain_community.llms import Ollama
+from langchain_community.llms.huggingface_pipeline import HuggingFacePipeline
 
-llm = Ollama(model="mistral")
+hf = HuggingFacePipeline.from_model_id(
+    model_id="mistralai/Mistral-7B-Instruct-v0.2",
+    task="text-generation",
+    pipeline_kwargs={"max_new_tokens": 120},
+)
 
 SERVICE_HOST = os.getenv('SERVER_HOST', '0.0.0.0')
 SERVICE_PORT = os.getenv('SERVER_PORT', 8080)
@@ -85,7 +89,7 @@ def ui():
     return render_template("basic_ui.html")
 
 def ask_mistral(question):
-    return llm.invoke(question)
+    return hf(question)
 
 def get_echo_response(input):
     return ask_mistral(question=input)
