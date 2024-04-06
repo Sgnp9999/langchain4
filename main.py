@@ -5,11 +5,9 @@ from flask import render_template
 import logging
 import os
 import sys
-from transformers import pipeline
+from langchain_community.llms import Ollama
 
-pipe = pipeline("text-generation", model="mistralai/Mistral-7B-Instruct-v0.2")
-
-
+llm = Ollama(model="mistral")
 
 SERVICE_HOST = os.getenv('SERVER_HOST', '0.0.0.0')
 SERVICE_PORT = os.getenv('SERVER_PORT', 8080)
@@ -87,7 +85,7 @@ def ui():
     return render_template("basic_ui.html")
 
 def ask_mistral(question):
-    return pipe(question)
+    return llm.invoke(question)
 
 def get_echo_response(input):
     return ask_mistral(question=input)

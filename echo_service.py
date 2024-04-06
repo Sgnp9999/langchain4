@@ -5,20 +5,9 @@ from flask import render_template
 import logging
 import os
 import sys
-from langchain_community.llms import HuggingFaceEndpoint
-from langchain.chains import LLMChain
-from langchain.prompts import PromptTemplate
-import os
-os.environ["HUGGINGFACEHUB_API_TOKEN"] = "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"
+from langchain_community.llms import Ollama
 
-
-template = """{question}"""
-prompt = PromptTemplate.from_template(template)
-repo_id = "mistralai/Mistral-7B-Instruct-v0.2"
-llm = HuggingFaceEndpoint(
-    repo_id=repo_id, max_length=128, temperature=0.5, token="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"
-)
-llm_chain = LLMChain(prompt=prompt, llm=llm)
+llm = Ollama(model="mistral")
 
 SERVICE_HOST = os.getenv('SERVER_HOST', '0.0.0.0')
 SERVICE_PORT = os.getenv('SERVER_PORT', 8080)
@@ -96,7 +85,7 @@ def ui():
     return render_template("basic_ui.html")
 
 def ask_mistral(question):
-    return llm_chain.invoke(question)
+    return llm.invoke(question)
 
 def get_echo_response(input):
     return ask_mistral(question=input)
